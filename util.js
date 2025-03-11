@@ -14,6 +14,7 @@ function El (tag, props, children) {
 }
 El.fragment = Symbol();
 
+
 Object.prototype.on = HTMLElement.prototype.addEventListener
 ls = new Proxy({}, {
     get:(t,p)=>JSON.parse(localStorage.getItem(p)),
