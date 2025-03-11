@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>test audio</title>
+</head>
+<body>
+  <button name="next">next</button>
+</body>
+<script type="text/javascript" src="./util.js"></script>
+<script type="text/javascript">
+class Audio {
+  constructor ({ src, seek, autoplay } = {}) {
+    Object.assign(this, { autoplay });
+
+    this.$audio = El('audio', {
+      preload: 'auto',
+      controls: 'controls',
+      src,
+      currentTime: seek,
+    });
+    document.body.appendChild(this.$audio);
+
+    if (this.$audio.readyState === 0)
+      this.$audio.addEventListener('loadedmetadata', e => this.handleLoaded());
+    else
+      this.handleLoaded();
+  }
+
+  handleLoaded () {
+    if (this.autoplay)
+      this.$audio.play();
+  }
+
+  release () {
+    this.$audio.remove();
+    this.$audio = null;
+  }
+}
+
+const audios = [
+  { dur: 950.4473, name: 'nebesa.mp3' },
+  { dur: 950.4473, name: 'reGEZ.mp3' },
+];
+
+window.on('load', e => {
+  let audio = new Audio({
+    src: './assets/audios/nebesa.mp3',
+    seek: 660,
+    autoplay: true,
+  });
+
+  $('button[name="next"]').on('click', e => {
+    audio.release();
+    const nextAudioInfo = audios[Math.random() > .5 ? 0 : 1];
+    audio = new Audio({
+      src: './assets/audios/' + nextAudioInfo.name,
+      seek: nextAudioInfo.dur * Math.random(),
+      autoplay: true,
+    });
+  });
+});
+
+</script>
+</html>
